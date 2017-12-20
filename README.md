@@ -1,10 +1,4 @@
-# mfp-apic
 
-IBM API Connect is a cloud-based API Management solution that allows you to design, control, secure, publish, manage, analyze, and scale your API with its simple-to-use configuration and coding platform. IBM Mobile Foundation integrates its security capabilities with IBM API Connect by using the MobileFirst OAuth Provider API template, which allows you to:
-
-Protect API Connect endpoints with the MobileFirst Server as the authorization server.
-Proxy MobileFirst client non-resource requests and responses through DataPower to the MobileFirst Server that is located behind the DMZ.
-	
 
 ## MFPOAuthLoginApplication
 A sample application demonstrating how to protect API resources using MFP Authorisation server.
