@@ -1,0 +1,196 @@
+---
+swagger: "2.0"
+info:
+  x-ibm-name: "mfpProxy"
+  title: "MFPProxy"
+  version: "1.0.0"
+schemes:
+- "https"
+host: "$(catalog.host)"
+basePath: "/mfp"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+securityDefinitions: {}
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+    - set-variable:
+        title: "MFPServerConfiguration"
+        actions:
+        - set: "mfp-server-url"
+          value: "https://mobile-server.bluemix.net"
+        - set: "mfp-server-context"
+          value: "mfp"
+        version: "1.0.0"
+    - gatewayscript:
+        title: "gatewayscript"
+        version: "1.0.0"
+        source: "var basePath = apim.getvariable('api.root');\nvar reqPath = apim.getvariable('request.path');\n\
+          var mfpServerContext = apim.getvariable('mfp-server-context');\nvar regex\
+          \ = new RegExp(basePath,\"g\");\nvar mfppath = reqPath.replace(regex, mfpServerContext);\n\
+          apim.setvariable('request.mfppath',mfppath);"
+    - proxy:
+        title: "proxy"
+        timeout: 60
+        verb: "keep"
+        cache-response: "protocol"
+        cache-ttl: 900
+        version: "1.0.0"
+        description: "Proxy MobileFirst client request to server"
+        target-url: "$(mfp-server-url)$(request.mfppath)$(request.search)"
+        secure-gateway: false
+    - gatewayscript:
+        title: "gatewayscript"
+        version: "1.0.0"
+        source: "var hm = require('header-metadata');\nvar locationHeader = hm.current.headers['Location'];\n\
+          \nif(locationHeader && locationHeader.indexOf('registration') > -1){\nvar\
+          \ mfpServerContext = apim.getvariable('mfp-server-context');\nvar orgName\
+          \ = apim.getvariable('api.org.name');\nvar catalogId = apim.getvariable('env.path');\n\
+          var basePath = apim.getvariable('api.root');\nvar clientExpectedMfpServerContext\
+          \ = orgName + '/' + catalogId + '/' + basePath;\n\n    var locationHeaderWithOriginalUri\n\
+          = locationHeader.replace(mfpServerContext, clientExpectedMfpServerContext);\n\
+          \    hm.current.set('Location', locationHeaderWithOriginalUri);\n    hm.response.set('Location',\
+          \ locationHeaderWithOriginalUri);\n}\n"
+  phase: "realized"
+paths:
+  /api/preauth/v1/logout:
+    post:
+      responses:
+        200:
+          description: "200 OK"
+      security:
+      - {}
+  /api/preauth/v1/heartbeat:
+    post:
+      responses:
+        200:
+          description: "200 OK"
+      security:
+      - {}
+  /api/directupdate/{version}/{checksum}/{delta}:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+      security:
+      - {}
+    parameters:
+    - name: "version"
+      type: "string"
+      required: true
+      in: "path"
+    - name: "checksum"
+      type: "string"
+      required: true
+      in: "path"
+    - name: "delta"
+      type: "string"
+      required: true
+      in: "path"
+  /api/loguploader:
+    post:
+      responses:
+        200:
+          description: "200 OK"
+      security:
+      - {}
+  /api/clientLogProfile/{appId}/{platform}/{version}:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+      security:
+      - {}
+  /api/clientLogProfile/{appId}/{platform}:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+      security:
+      - {}
+    parameters:
+    - name: "appId"
+      type: "string"
+      required: true
+      in: "path"
+    - name: "platform"
+      type: "string"
+      required: true
+      in: "path"
+  /api/registration/v1/self/{clientId}:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+      security:
+      - {}
+    parameters:
+    - name: "clientId"
+      type: "string"
+      required: true
+      in: "path"
+    put:
+      responses:
+        200:
+          description: "200 OK"
+      security:
+      - {}
+  /api/registration/v1/self:
+    post:
+      responses:
+        200:
+          description: "200 OK"
+      security:
+      - {}
+    put:
+      responses:
+        200:
+          description: "200 OK"
+      security:
+      - {}
+  /api/az/v1/authorization/redirect/{clientId}:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+      security:
+      - {}
+    parameters:
+    - name: "clientId"
+      type: "string"
+      required: true
+      in: "path"
+  /api/az/v1/authorization:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+      security:
+      - {}
+  /api/az/v1/token:
+    post:
+      responses:
+        200:
+          description: "200 OK"
+      security:
+      - {}
+  /api/preauth/v1/preauthorize:
+    post:
+      responses:
+        200:
+          description: "200 OK"
+      security:
+      - {}
+  /api/adapters/ResourceAdapter/balance:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+definitions: {}
+tags: []

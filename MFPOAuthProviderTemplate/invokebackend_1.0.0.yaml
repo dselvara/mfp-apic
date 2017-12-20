@@ -1,0 +1,47 @@
+---
+swagger: "2.0"
+info:
+  x-ibm-name: "invokebackend"
+  title: "InvokeBackend"
+  version: "1.0.0"
+schemes:
+- "https"
+host: "$(catalog.host)"
+basePath: "/invokebackend"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+securityDefinitions:
+  oauth-1:
+    type: "oauth2"
+    description: ""
+    flow: "implicit"
+    scopes:
+      RegisteredClient: ""
+      accessRestricted: ""
+    authorizationUrl: ""
+    x-tokenIntrospect:
+      url: "https://api.eu.apiconnect.ibmcloud.com/dselvarainibmcom-sdp/sb/mfpoauth/introspect"
+security:
+- oauth-1:
+  - "RegisteredClient"
+  - "accessRestricted"
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+    - invoke:
+        target-url: "https://apim-services.mybluemix.net/banka/v1/branches"
+  phase: "realized"
+paths:
+  /getdetails:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+definitions: {}
+tags: []

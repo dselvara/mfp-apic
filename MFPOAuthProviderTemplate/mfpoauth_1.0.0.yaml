@@ -1,0 +1,88 @@
+---
+swagger: "2.0"
+info:
+  x-ibm-name: "MFPOAuth"
+  title: "MFPOAuth"
+  version: "1.0.0"
+schemes:
+- "https"
+host: "$(catalog.host)"
+basePath: "/mfpoauth"
+securityDefinitions:
+  clientIdHeader:
+    type: "apiKey"
+    in: "header"
+    name: "X-IBM-Client-Id"
+security:
+- clientIdHeader: []
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+    - gatewayscript:
+        title: "SetMessageHeaders"
+        version: "1.0.0"
+        source: "// setting invoke headers and body\n\n\n\n\napim.readInputAsBuffer(function\
+          \ (error, buffer) {\n    if (error) {\n        var ar = {'active1': false};\n\
+          \        apim.setvariable('message.body', ar);\n    }\n    else\n    {\n\
+          \       \n        var topsplit = (buffer.toString()).split('&');\n     \
+          \  \n        topsplit.forEach(function(a) {\n            if (a.substring(0,\
+          \ 6) === 'token=') {\n                \n               var accesstoken =\
+          \ a.substring(6);\n   \n        \n        apim.setvariable('accessToken',accesstoken);\n\
+          \        \n        } \n    \n    \n    }); //foreach\n    }\n    \n}); //readInputbuffer\n\
+          \napim.setvariable('message.headers.Content-Type', 'application/x-www-form-urlencoded');\n\
+          apim.setvariable('message.body','grant_type=client_credentials&scope=authorization.introspect');\n\
+          \n \n     \n    \n     \n\n"
+    - invoke:
+        title: "GetAuthBearerToken"
+        timeout: 60
+        verb: "POST"
+        cache-response: "protocol"
+        cache-ttl: 900
+        stop-on-error:
+        - null
+        version: "1.0.0"
+        target-url: "https://mobile-server.bluemix.net/mfp/api/az/v1/token"
+        username: "apic"
+        password: "admin"
+    - gatewayscript:
+        title: "SetToken"
+        version: "1.0.0"
+        source: "apim.setvariable('message.headers.Authorization','Bearer ' + apim.getvariable('message.body').access_token);\n\
+          apim.setvariable('message.headers.content-type', 'application/x-www-form-urlencoded');\n\
+          apim.setvariable('message.body', 'token='+apim.getvariable('accessToken'));"
+    - invoke:
+        title: "InvokeIntrospection"
+        timeout: 60
+        verb: "POST"
+        cache-response: "protocol"
+        cache-ttl: 900
+        stop-on-error:
+        - null
+        version: "1.0.0"
+        target-url: "https://mobile-server.bluemix.net/mfp/api/az/v1/introspection"
+  phase: "realized"
+paths:
+  /introspect:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+    post:
+      responses:
+        200:
+          description: "200 OK"
+      parameters:
+      - name: "token"
+        type: "string"
+        required: true
+        in: "formData"
+definitions: {}
+tags: []
+consumes:
+- "application/json"
+produces:
+- "application/json"
