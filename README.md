@@ -1,4 +1,4 @@
-
+## IBM MobileFirst Platform Foundation ##
 
 ## MFPOAuthLoginApplication
 A sample application demonstrating how to protect API resources using MFP Authorisation server.
@@ -7,21 +7,26 @@ https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/authenticat
 
 ### Usage
 
-1. Use either Maven, MobileFirst CLI or your IDE of choice to [build and deploy the available `ResourceAdapter` and `UserLogin` adapters](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/adapters/creating-adapters/).
+1.	Use either Maven, MobileFirst CLI or your IDE of choice to [build and deploy the available `ResourceAdapter` and `UserLogin` adapters](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/adapters/creating-adapters/).
 
- The UserAuthentication Security Check adapter can be found in https://github.com/MobileFirst-Platform-Developer-Center/SecurityCheckAdapters/tree/release80.
- 
-2. Open MFPOAuthLoginApplication in Android Studio.
-a.	Change the following in the ProtectedActivity.java code
+    The UserAuthentication Security Check adapter can be found in https://github.com/MobileFirst-Platform-Developer-Center/SecurityCheckAdapters/tree/release80.
+
+
+2.	Open MFPOAuthLoginApplication in Android Studio.
+
+	a.	Change the following in the ProtectedActivity.java code
+
       	     apicPathUri = new 
                    URI("https://<gateway-host-name>/<orgname>/<catalogname>/invokebackend/getdetails");
 
-For the API Connect endpoint path (apicPathUri) supply the full URL, constructed as follows: 
+	For the API Connect endpoint path (apicPathUri) supply the full URL, constructed as follows: 
 https://{GatewayHostName}/{organizationName}/{catalogName}/invokebackend/getdetails
 
-b.	Replace this:
-request.addHeader("X-IBM-Client-Id","APIC_CLIENT_ID");
-with the actual client Id obtained from the APIC dev portal after registering application. Please refer https://www.ibm.com/support/knowledgecenter/en/SSFS6T/com.ibm.apic.devportal.doc/task_cmsportal_registerapps.html for more information on how to register applications in APIC dev portal.
+	b.	Replace this:
+
+	request.addHeader("X-IBM-Client-Id","APIC_CLIENTID");
+
+	with the actual client Id obtained from the APIC dev portal after registering application. Please refer https://www.ibm.com/support/knowledgecenter/en/SSFS6T/com.ibm.apic.devportal.doc/task_cmsportal_registerapps.html for more information on how to register applications in APIC dev portal.
 
 
 
@@ -29,6 +34,7 @@ with the actual client Id obtained from the APIC dev portal after registering ap
  - `mfpdev app register` - to register the application.
  - `mfpdev app push` - to map the `accessRestricted` scope to the `UserLogin` security check.
  
+
 4. For APIConnect configuration details please refer the blog
 
 ### Supported Levels
