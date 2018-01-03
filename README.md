@@ -33,9 +33,9 @@ https://{GatewayHostName}/{organizationName}/{catalogName}/invokebackend/getdeta
 3. From a command-line window, navigate to the project's root folder and run the commands:
  - `mfpdev app register` - to register the application.
  - `mfpdev app push` - to map the `accessRestricted` scope to the `UserLogin` security check.
- 
 
-4. For APIConnect configuration details please refer the blog
+
+4. For APIConnect configuration details please refer the blog - https://mobilefirstplatform.ibmcloud.com/tutorials/en/product-integration/8.0/apiconnect/
 
 ### Supported Levels
 IBM MobileFirst Platform Foundation 8.0
